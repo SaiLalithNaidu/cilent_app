@@ -2,6 +2,8 @@ import 'package:client_app/Controller/login_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/state_manager.dart';
 
+import '../Widgets/otp_text_field.dart';
+
 class Register_Page extends StatelessWidget {
   const Register_Page({super.key});
 
@@ -26,6 +28,7 @@ class Register_Page extends StatelessWidget {
               const SizedBox(height: 20),
               TextField(
                 keyboardType: TextInputType.text,
+                controller: ctrl.registerNameCtrl,
                 decoration: InputDecoration(
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12)),
@@ -35,7 +38,8 @@ class Register_Page extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               TextField(
-                keyboardType: TextInputType.text,
+                keyboardType: TextInputType.phone,
+                controller: ctrl.registerNumberCtrl,
                 decoration: InputDecoration(
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12)),
@@ -44,16 +48,24 @@ class Register_Page extends StatelessWidget {
                     hintText: 'Mobile Number'),
               ),
               const SizedBox(height: 20),
+              Otp_Text_Field(
+                otpController: ctrl.otpController,
+                visibulity: ctrl.otpFieldShown,
+                onComplete: (otp) {
+                  ctrl.otpEnter = int.tryParse(otp ?? '0000');
+                },
+              ),
+              const SizedBox(height: 20),
               ElevatedButton(
                   onPressed: () {
-                    ctrl.addUser();
+                    ctrl.sendOtp();
                     // Navigator.of(context)
                     //     .push(MaterialPageRoute(builder: (ctx) => LoginPage()));
                   },
                   style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: Colors.deepPurple),
-                  child: Text('Register')),
+                  child: Text(ctrl.otpFieldShown ? 'Register' : 'Send OTP')),
               TextButton(
                   onPressed: () {},
                   child: Text('Alredy have an Account Login..?')),
