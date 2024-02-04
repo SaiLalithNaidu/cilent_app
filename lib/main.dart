@@ -2,14 +2,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'Controller/login_controller.dart';
-import 'Pages/register_page.dart';
+import 'Pages/practice_register.dart';
 import 'fire_base_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: firebaseOptions);
-  Get.put(Login_Controller());
+  // Get.put(Login_Controller());
   runApp(const MyApp());
 }
 
@@ -26,6 +25,6 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: Register_Page());
+        home: PracticeRegisterationScreeen());
   }
 }

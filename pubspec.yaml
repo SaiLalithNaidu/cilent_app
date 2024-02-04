@@ -29,6 +29,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   firebase_core: ^2.24.2
+  firebase_auth: ^4.17.3
   cloud_firestore: ^4.14.0
   get_storage: ^2.1.1
   get: ^4.6.6
@@ -42,6 +43,7 @@ dependencies:
   google_fonts: ^6.1.0
   dropdown_button2: ^2.3.9
   otp_text_field_v2: ^1.0.3
+  fluttertoast: ^8.2.4
 
 dev_dependencies:
   flutter_test:
