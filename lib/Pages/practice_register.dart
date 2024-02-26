@@ -18,6 +18,7 @@ class _PracticeRegisterationScreeenState
   String password = "";
   var _fromKey = GlobalKey<FormState>();
   bool isLoading = false;
+  bool _obscureText = true; // State variable to toggle password visibility
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -120,41 +121,53 @@ class _PracticeRegisterationScreeenState
                           ),
                           SizedBox(height: 5),
                           Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: TextFormField(
-                              obscureText: true,
-                              keyboardType: TextInputType.number,
-                              validator: (value) {
-                                return value!.length > 6
-                                    ? null
-                                    : 'Password must be 6 characters';
-                              },
-                              onChanged: (value) {
-                                setState(() {
-                                  password = value;
-                                });
-                              },
-                              decoration: InputDecoration(
-                                hintText: "Passsword",
-                                labelText: 'Password',
-                                border: InputBorder.none,
-                                filled: true,
-                                fillColor: Colors.grey[10],
-                                contentPadding: EdgeInsets.all(
-                                    25), // Adjust padding as needed
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                  borderSide:
-                                      BorderSide(color: Colors.transparent),
+                              padding: const EdgeInsets.all(20.0),
+                              child: TextFormField(
+                                obscureText: _obscureText,
+                                keyboardType: TextInputType.number,
+                                validator: (value) {
+                                  return value!.length > 6
+                                      ? null
+                                      : 'Password must be 6 characters';
+                                },
+                                onChanged: (value) {
+                                  setState(() {
+                                    password = value;
+                                  });
+                                },
+                                decoration: InputDecoration(
+                                  hintText: "Passsword",
+                                  labelText: 'Password',
+                                  border: InputBorder.none,
+                                  filled: true,
+                                  fillColor: Colors.grey[10],
+                                  contentPadding: EdgeInsets.all(
+                                      25), // Adjust padding as needed
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                    borderSide:
+                                        BorderSide(color: Colors.transparent),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                    borderSide:
+                                        BorderSide(color: Colors.transparent),
+                                  ),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      _obscureText
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                      color: Colors.grey,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _obscureText = !_obscureText;
+                                      });
+                                    },
+                                  ),
                                 ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                  borderSide:
-                                      BorderSide(color: Colors.transparent),
-                                ),
-                              ),
-                            ),
-                          ),
+                              )),
                           SizedBox(height: 8),
                           Container(
                             width: 320,
@@ -180,7 +193,7 @@ class _PracticeRegisterationScreeenState
                           TextButton(
                               onPressed: () {
                                 Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (ctx) => const LoginPage()));
+                                    builder: (ctx) => const login_Page()));
                               },
                               child: Text('Alreadt have an account..?')),
                           SizedBox(height: 15),
@@ -231,7 +244,7 @@ class _PracticeRegisterationScreeenState
           });
           Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (context) => LoginPage()),
+              MaterialPageRoute(builder: (context) => login_Page()),
               (Route<dynamic> route) => false);
           Fluttertoast.showToast(msg: "Succesfully Registred");
         }).catchError((onError) {
