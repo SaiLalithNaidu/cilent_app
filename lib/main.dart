@@ -3,8 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'Pages/splashScreen.dart';
-import 'fire_base_options.dart';
 
+FirebaseOptions firebaseOptions = const FirebaseOptions(
+  apiKey: 'AIzaSyClrXb_86MCrCmxfFTWUAk0ESp7bt76eT8',
+  appId: '1:387450668918:android:9b27554532adbc699e1c57',
+  messagingSenderId: '387450668918',
+  projectId: 'realtime-3fb9b',
+  // Add other necessary options
+);
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: firebaseOptions);

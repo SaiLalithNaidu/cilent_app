@@ -233,12 +233,12 @@ class _PracticeRegisterationScreeenState
               context,
               MaterialPageRoute(builder: (context) => LoginPage()),
               (Route<dynamic> route) => false);
+          Fluttertoast.showToast(msg: "Succesfully Registred");
         }).catchError((onError) {
           setState(() {
             isLoading = false;
           });
-          Fluttertoast.showToast(
-              msg: "Error toast messege displaying: " + onError.message!);
+          Fluttertoast.showToast(msg: "Error: " + onError.message!);
         });
       }
     } catch (e) {

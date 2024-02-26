@@ -1,3 +1,4 @@
+import 'package:client_app/Pages/practice_register.dart';
 import 'package:flutter/material.dart';
 
 import 'home_page.dart';
@@ -44,7 +45,12 @@ class LoginPage extends StatelessWidget {
                     foregroundColor: Colors.white,
                     backgroundColor: Colors.deepPurple),
                 child: Text('Login')),
-            TextButton(onPressed: () {}, child: Text('Register New Account')),
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (ctx) => PracticeRegisterationScreeen()));
+                },
+                child: Text('Register New Account')),
           ],
         ),
       ),
