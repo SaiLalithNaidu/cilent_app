@@ -11,10 +11,16 @@ FirebaseOptions firebaseOptions = const FirebaseOptions(
   projectId: 'realtime-3fb9b',
   // Add other necessary options
 );
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: firebaseOptions);
-  // Get.put(Login_Controller());
+  await Firebase.initializeApp(
+    options: const FirebaseOptions(
+        apiKey: 'AIzaSyClrXb_86MCrCmxfFTWUAk0ESp7bt76eT8',
+        appId: '1:387450668918:android:9b27554532adbc699e1c57',
+        messagingSenderId: '387450668918',
+        projectId: 'realtime-3fb9b',
+        storageBucket: "gs://realtime-3fb9b.appspot.com"),
+  );
   runApp(const MyApp());
 }
 
