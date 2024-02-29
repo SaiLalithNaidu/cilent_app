@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:client_app/modal/sampleModel.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -16,35 +18,115 @@ class _PickImageState extends State<PickImage> {
   File? _imageFile;
   UploadTask? uploadTask;
   bool isLoading = false;
+  TextEditingController titleInput = TextEditingController();
+  TextEditingController descriptionMessage = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Upload Image Screen"),
       ),
-      body: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                _imageFile == null
-                    ? Text("No Image File Choosen")
-                    : Image.file(_imageFile!),
-                ElevatedButton(
-                    onPressed: () {
-                      pickImage();
-                    },
-                    child: Text("Upload Image")),
-                ElevatedButton(
-                    onPressed: () {
-                      uploadImage();
-                    },
-                    child: Text("Save Image to Storage"))
-              ],
-            ),
+      body: SingleChildScrollView(
+        child: isLoading
+            ? Center(child: CircularProgressIndicator())
+            : Center(
+                child: Column(
+                  children: [
+                    _imageFile == null
+                        ? Text("No Image File Choosen")
+                        : Image.file(_imageFile!),
+                    ElevatedButton(
+                        onPressed: () {
+                          pickImage();
+                        },
+                        child: Text("Upload Image")),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    TextField(
+                      controller: titleInput,
+                      decoration: InputDecoration(
+                          hintText: "Enter Title",
+                          labelText: "Title",
+                          border: OutlineInputBorder()),
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    TextField(
+                      controller: descriptionMessage,
+                      minLines: 3,
+                      maxLines: 6,
+                      decoration: const InputDecoration(
+                          hintText: "Message",
+                          labelText: "Message",
+                          border: OutlineInputBorder()),
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    Container(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                          onPressed: () {
+                            uploadImage();
+                            uploadStatus();
+                          },
+                          child: Text("Save Image to Storage")),
+                    )
+                  ],
+                ),
+              ),
+      ),
     );
   }
 
-  Future<void> pickImage() async {
+  Future<void> uploadStatus() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      var mainImageUrl = await uploadImage();
+      String docId = FirebaseFirestore.instance.collection("statuses").doc().id;
+      SampleModel sampleObj = new SampleModel(
+        docId,
+        mainImageUrl.toString(),
+        titleInput
+            .text, // Access the current value of the title input controller
+        descriptionMessage
+            .text, // Access the current value of the description input controller
+      );
+      await FirebaseFirestore.instance
+          .collection("statuses")
+          .doc(sampleObj.docId)
+          .set(sampleObj.toMap());
+
+      Fluttertoast.showToast(
+        msg: "Status uploaded successfully",
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.black54,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    } catch (e) {
+      // Handle errors here
+      print('Error uploading status: $e');
+      Fluttertoast.showToast(
+        msg: "Error uploading status: $e",
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<dynamic> pickImage() async {
     // Use try-catch to handle any errors during image picking
     try {
       final XFile? pickedImage =
@@ -63,41 +145,38 @@ class _PickImageState extends State<PickImage> {
     }
   }
 
-  uploadImage() async {
+  Future<dynamic> uploadImage() async {
     try {
       setState(() {
         isLoading = true;
       });
+
       FirebaseStorage storage = FirebaseStorage.instance;
       Reference storageRef = storage.ref().child("Statuses");
-      uploadTask = storageRef
+      TaskSnapshot snapshot = await storageRef
           .child("Images" + DateTime.now().toIso8601String())
           .putFile(_imageFile!);
-      uploadTask!.then((TaskSnapshot snapshot) {
-        // Handle completion here
-        print("Upload complete!");
-        snapshot.ref.getDownloadURL().then((String downloadURL) {
-          // Store the download URL in a variable
-          String url = downloadURL;
 
-          // Now you can use 'url' variable to access the download URL
-          print("Download URL: $url");
-          Fluttertoast.showToast(
-            msg: "Upload succesFull",
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.black54,
-            textColor: Colors.white,
-            fontSize: 16.0,
-          );
-          return url;
-        });
-      });
+      String downloadURL = await snapshot.ref.getDownloadURL();
+      print("Download URL: $downloadURL");
+
+      Fluttertoast.showToast(
+        msg: "Image uploaded successfully",
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.black54,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+
+      return downloadURL;
+    } catch (e) {
+      // Handle errors here
+      print('Error uploading image: $e');
+      throw e; // Rethrow the error to propagate it to the caller
+    } finally {
       setState(() {
         isLoading = false;
       });
-    } catch (e) {
-      // Handle errors here
-      print('Error picking image: $e');
     }
   }
 }
