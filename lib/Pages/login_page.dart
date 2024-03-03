@@ -4,8 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import 'Product_Description_Sscreen.dart';
-
 class login_Page extends StatefulWidget {
   const login_Page({super.key});
 
@@ -99,7 +97,7 @@ class _login_PageState extends State<login_Page> {
                               padding: const EdgeInsets.all(20.0),
                               child: TextFormField(
                                 obscureText: _obscureText,
-                                keyboardType: TextInputType.number,
+                                keyboardType: TextInputType.text,
                                 validator: (value) {
                                   return value!.length > 6
                                       ? null

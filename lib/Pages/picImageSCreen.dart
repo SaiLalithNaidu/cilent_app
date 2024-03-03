@@ -102,6 +102,8 @@ class _PickImageState extends State<PickImage> {
           .doc(sampleObj.docId)
           .set(sampleObj.toMap());
 
+      Navigator.pop(context);
+
       Fluttertoast.showToast(
         msg: "Status uploaded successfully",
         timeInSecForIosWeb: 1,
