@@ -45,7 +45,7 @@ class _PickImageState extends State<PickImage> {
                     ),
                     TextField(
                       controller: titleInput,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                           hintText: "Enter Title",
                           labelText: "Title",
                           border: OutlineInputBorder()),
